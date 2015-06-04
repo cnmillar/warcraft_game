@@ -10,7 +10,15 @@ class Barracks
 	end
 
   def can_train_footman?
-  	gold >= 135 && food >= 2
+    gold >= 135 && food >= 2
+  end
+  
+  def can_train_peasant?    # where in the assignment does it say what a peasant needs and costs?
+    food >= 5 && gold >= 90
+  end
+
+  def can_train_seige?    # where in the assignment does it say what a peasant needs and costs?
+    gold >= 200 && food >= 3 && lumber >= 60
   end
 
   def train_footman
@@ -29,8 +37,13 @@ class Barracks
   	end
   end
 
-  def can_train_peasant?		# where in the assignment does it say what a peasant needs and costs?
-  	food >= 5 && gold >= 90
+  def train_seige
+    if can_train_seige?
+      @gold -= 200
+      @food -= 3
+      @lumber -= 60
+      SeigeEngine.new
+    end
   end
 
   def damage(damage_amount)

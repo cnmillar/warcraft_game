@@ -17,7 +17,7 @@ require_relative 'spec_helper'
 describe SeigeEngine do
 
 	before :each do
-		@seige_engine = SeigeEngine.new(400, 50)
+		@seige_engine = SeigeEngine.new
 	end
 
 	describe "#initialize" do
@@ -32,48 +32,60 @@ describe SeigeEngine do
 
 	describe "#attack!" do
 		it "seige_engine can't attack footman" do
-
+      enemy = Footman.new
+      enemy.should_receive(:damage).with(0)
+      @seige_engine.attack!(enemy)
 		end	
 
 		it "seige_engine can't attack peasants" do
-
+      enemy = Peasant.new
+      enemy.should_receive(:damage).with(0)
+      @seige_engine.attack!(enemy)
 		end	
 
 		it "seige_engine can attack other SeigeEngines with attack_power damage" do
-
+      enemy = SeigeEngine.new
+      enemy.should_receive(:damage).with(50)
+      @seige_engine.attack!(enemy)
 		end	
 
 		it "seige_engine can attack Barracks with 2 times the attack_power damage" do
-
+      enemy = Barracks.new
+      enemy.should_receive(:damage).with(100)
+      @seige_engine.attack!(enemy)
 		end	
 	end
 
 	describe "#damage" do
 		it "seige_engine can take on damage from other units at the regular AP" do
-
+      expect(@seige_engine.damage(100)).to eq(300)
 		end
 	end
 end
 
 describe Barracks do
-	  describe "#can_train_seige?" do
+
+  before :each do
+    @barracks = Barracks.new
+  end
+	  
+  describe "#can_train_seige?" do
     it "returns true if there are enough resources to train a seige engine" do
-      # now check to see if one is trainable
-      # can jump right to the test since barracks start off with enough gold and food to train multiple peasants
       expect(@barracks.can_train_seige?).to be_truthy
     end
 
     it "returns false if there isn't enough food" do
-      # Make the barracks believe it only has 4 food items left, even though it starts with 80
-      # This is done by overwriting the `food` getter method
-      @barracks.should_receive(:food).and_return(4)
+      @barracks.should_receive(:food).and_return(2)
       expect(@barracks.can_train_seige?).to be_falsey
     end
 
     it "returns false if there isn't enough gold" do
-      # Make the barracks believe it only has 89 gold left, even though it starts with 1000
-      # This is done by overwriting the `gold` getter method
       @barracks.should_receive(:gold).and_return(89)
+      expect(@barracks.can_train_seige?).to be_falsey
+    end
+
+    it "returns false if there isn't enough lumber" do
+      @barracks.should_receive(:lumber).and_return(59)
       expect(@barracks.can_train_seige?).to be_falsey
     end
   end
@@ -88,16 +100,3 @@ describe Barracks do
     end
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,4 +1,3 @@
-# http://classic.battle.net/war3/human/units/footman.shtml
 require './lib/unit.rb'
 
 class Footman < Unit
